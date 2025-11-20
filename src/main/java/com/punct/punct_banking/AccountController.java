@@ -1,8 +1,10 @@
 package com.punct.punct_banking;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -23,5 +25,24 @@ public class AccountController {
     @GetMapping("/me")
     public List<Account> getMyAccounts(Principal principal) {
         return accountService.getMyAccounts(principal.getName());
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<String> transferMoney(@RequestBody Map<String, Object> request, Principal principal) {
+        try {
+            String fromIban = (String) request.get("fromIban");
+            String toIban = (String) request.get("toIban");
+            BigDecimal amount = new BigDecimal(request.get("amount").toString());
+
+            accountService.transferFunds(principal.getName(), fromIban, toIban, amount);
+            return ResponseEntity.ok("Transfer successful");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{iban}/transactions")
+    public List<Transaction> getHistory(@PathVariable String iban, Principal principal) {
+        return accountService.geTransactionHistory(principal.getName(), iban);
     }
 }
