@@ -36,7 +36,7 @@ function Home() {
                     Login
                 </button>
             </Link>
-            
+
             <button className="px-4 py-2 
                                rounded-full 
                                bg-emerald-400 
@@ -67,7 +67,7 @@ function Home() {
           {/* CATCH-PHRASE*/}
           <div className="hidden 
                           md:block 
-                          ml-[80px]
+                          ml-[300px]
                           max-w-md">
 
             <h1 className="text-3xl 
