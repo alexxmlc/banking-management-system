@@ -14,7 +14,7 @@ function ClockNavigation() {
     <div className="flex 
                     items-center ">
       {/* CLOCK */}
-      <div className="w-[50rem]
+      <div className="w-[30rem]
                       aspect-square">
         <img
           src={clockImg}
