@@ -34,3 +34,7 @@ build/
 
 ### Docker / Database ###
 postgres-data/
+
+### React / Frontend ###
+frontend/node_modules/
+frontend/dist/
