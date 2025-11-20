@@ -1,4 +1,5 @@
 import ClockNavigation from "./ClockNavigation";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -24,15 +25,17 @@ function Home() {
 
           <div className="space-x-4">
 
-            <button className="px-4 py-2 
+            <Link to = "/login">
+                <button className="px-4 py-2 
                                 rounded-full 
                                 border 
                                 border-emerald-400 
                                 text-[15px] 
                                 hover:bg-emerald-400/10 
                                 transition">
-              Login
-            </button>
+                    Login
+                </button>
+            </Link>
             
             <button className="px-4 py-2 
                                rounded-full 
