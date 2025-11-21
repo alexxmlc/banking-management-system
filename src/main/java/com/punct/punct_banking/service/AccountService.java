@@ -1,5 +1,11 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.service;
 
+import com.punct.punct_banking.models.entity.Account;
+import com.punct.punct_banking.models.entity.Transaction;
+import com.punct.punct_banking.models.entity.User;
+import com.punct.punct_banking.repository.AccountRepository;
+import com.punct.punct_banking.repository.TransactionRepository;
+import com.punct.punct_banking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

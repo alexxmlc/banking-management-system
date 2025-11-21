@@ -1,4 +1,4 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,6 +10,9 @@ import lombok.ToString;
 
 import java.math.BigDecimal;
 
+/**
+ * TODO: write documentation
+ */
 @Entity
 @Data
 @NoArgsConstructor

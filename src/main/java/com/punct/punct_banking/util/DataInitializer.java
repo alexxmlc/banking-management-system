@@ -1,5 +1,7 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.util;
 
+import com.punct.punct_banking.models.entity.User;
+import com.punct.punct_banking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -27,8 +29,6 @@ public class DataInitializer implements CommandLineRunner {
             admin.setPhoneNumber("0000000000");
             admin.setAddress("Admin HQ");
 
-            // Assign ADMIN role directly
-            // Your SecurityConfig looks for "ROLE_ADMIN"
             admin.setRoles("ROLE_USER, ROLE_ADMIN");
 
             userRepository.save(admin);

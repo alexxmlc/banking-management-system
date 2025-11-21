@@ -1,8 +1,11 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.controller;
 
 import java.util.List;
 import java.util.Optional;
 
+import com.punct.punct_banking.JwtUtils;
+import com.punct.punct_banking.models.entity.User;
+import com.punct.punct_banking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

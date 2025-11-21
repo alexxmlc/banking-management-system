@@ -18,10 +18,12 @@ function App() {
         setIsAuthenticated(false); // Switch back to Login screen
     };
 
-    return (<div>
+    return (
+        <div className="w-full min-h-screen">
             {isAuthenticated ? (<Accounts onLogout={handleLogout}/>) : (
                 <Login onLoginSuccess={() => setIsAuthenticated(true)}/>)}
-        </div>);
+        </div>
+    );
 }
 
 export default App;

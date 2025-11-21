@@ -2,7 +2,8 @@ package com.punct.punct_banking;
 
 import java.util.Collection;
 
-import org.hibernate.bytecode.internal.bytebuddy.BytecodeProviderImpl;
+import com.punct.punct_banking.models.entity.User;
+import com.punct.punct_banking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;

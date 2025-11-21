@@ -1,4 +1,4 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.models.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
