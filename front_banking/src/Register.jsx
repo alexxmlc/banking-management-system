@@ -1,3 +1,4 @@
+// src/Register.jsx (or src/pages/Register.jsx)
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./components/Header.jsx";
@@ -21,7 +22,7 @@ function Register() {
     setError("");
 
     if (password !== confirm) {
-      setError("Parolele nu coincid.");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -35,11 +36,11 @@ function Register() {
         address,
       });
 
-      // după ce s-a creat contul, îl poți trimite pe login
+      // After successful registration, redirect to login
       navigate("/login");
     } catch (err) {
       console.error(err);
-      setError("Înregistrarea a eșuat. Verifică datele și încearcă din nou.");
+      setError("Registration failed. Please check your information and try again.");
     } finally {
       setLoading(false);
     }
@@ -52,10 +53,10 @@ function Register() {
       <div className="flex flex-1 items-center justify-center px-4">
         <div className="w-full max-w-lg bg-slate-900/80 border border-indigo-400/40 rounded-3xl shadow-xl p-8">
           <h1 className="text-2xl font-semibold mb-2 text-indigo-200">
-            Creează-ți un cont
+            Create your account
           </h1>
           <p className="text-sm text-slate-300 mb-6">
-            Deschide-ți contul PointBank ca să vezi și să gestionezi toate finanțele într-un singur loc.
+            Open your PointBank account to see and manage all your finances in one place.
           </p>
 
           {error && (
@@ -105,13 +106,13 @@ function Register() {
               />
             </div>
 
-            {/* Telefon */}
+            {/* Phone */}
             <div>
               <label
                 htmlFor="phone"
                 className="block text-sm font-medium text-slate-200 mb-1"
               >
-                Număr de telefon
+                Phone number
               </label>
               <input
                 id="phone"
@@ -120,17 +121,17 @@ function Register() {
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-700 text-slate-100 text-sm
                            focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-                placeholder="07xx xxx xxx"
+                placeholder="+40 7xx xxx xxx"
               />
             </div>
 
-            {/* Adresă */}
+            {/* Address */}
             <div>
               <label
                 htmlFor="address"
                 className="block text-sm font-medium text-slate-200 mb-1"
               >
-                Adresă
+                Address
               </label>
               <input
                 id="address"
@@ -139,18 +140,18 @@ function Register() {
                 onChange={(e) => setAddress(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-700 text-slate-100 text-sm
                            focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
-                placeholder="Str. Exemplu nr. 10"
+                placeholder="Street, number, city"
               />
             </div>
 
-            {/* Parolă */}
+            {/* Passwords */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label
                   htmlFor="password"
                   className="block text-sm font-medium text-slate-200 mb-1"
                 >
-                  Parolă
+                  Password
                 </label>
                 <input
                   id="password"
@@ -169,7 +170,7 @@ function Register() {
                   htmlFor="confirm"
                   className="block text-sm font-medium text-slate-200 mb-1"
                 >
-                  Confirmă parola
+                  Confirm password
                 </label>
                 <input
                   id="confirm"
@@ -184,7 +185,7 @@ function Register() {
               </div>
             </div>
 
-            {/* Buton submit */}
+            {/* Submit button */}
             <button
               type="submit"
               disabled={loading}
@@ -192,7 +193,7 @@ function Register() {
                          hover:bg-indigo-300 disabled:opacity-60 disabled:cursor-not-allowed
                          transition border border-indigo-300 shadow-lg shadow-indigo-500/20"
             >
-              {loading ? "Se creează contul..." : "Creează cont"}
+              {loading ? "Creating your account..." : "Create account"}
             </button>
           </form>
         </div>

@@ -1,7 +1,6 @@
 package com.punct.punct_banking.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +19,7 @@ public class Account {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String iban; // identificatorul unic pentru cont
+    private String iban;
 
     @Column(nullable = false)
     private BigDecimal balance = BigDecimal.ZERO;
@@ -30,7 +29,9 @@ public class Account {
 
     @ManyToOne
     @JsonIgnore
-    @ToString.Exclude 
-    @EqualsAndHashCode.Exclude 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private User user;
+
+
 }

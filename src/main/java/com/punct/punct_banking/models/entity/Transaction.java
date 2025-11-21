@@ -30,4 +30,7 @@ public class Transaction {
     // TODO: STATUS for when we want to implement `transaction requests` and `confirmations` eg. notification system
 
     private String description;
+
+
+
 }

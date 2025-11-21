@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "app_user") 
+@Table(name = "app_user")
 @Data
 @NoArgsConstructor
 public class User {
 
     @Id
-    @Size(min = 13, max = 13, message = "CNP must be exactly 13 digits") 
-    private String id; 
+    @Size(min = 13, max = 13, message = "CNP must be exactly 13 digits")
+    private String id;
 
     @NotBlank(message = "Username cannot be blank")
     private String username;
@@ -46,5 +46,7 @@ public class User {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Account> accounts = new ArrayList<>();
+
+
 
 }

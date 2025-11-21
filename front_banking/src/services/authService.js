@@ -13,7 +13,7 @@ export async function login(username, password) {
     throw new Error("Login failed");
   }
 
-  return response.json();
+  return response.json(); // JwtResponse
 }
 
 export async function register(userData) {
@@ -30,5 +30,11 @@ export async function register(userData) {
     throw new Error("Register failed");
   }
 
-  return response.json(); // sau nimic, depinde ce întoarce backend-ul
+  // Some backends return 201 with no body for register.
+  // Since your UI doesn't use the response, we can safely just return nothing.
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
 }
