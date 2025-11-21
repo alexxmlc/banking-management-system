@@ -1,5 +1,7 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.controller;
 
+import com.punct.punct_banking.models.entity.User;
+import com.punct.punct_banking.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

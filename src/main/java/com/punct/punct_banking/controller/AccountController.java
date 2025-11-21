@@ -1,5 +1,8 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.controller;
 
+import com.punct.punct_banking.models.entity.Account;
+import com.punct.punct_banking.service.AccountService;
+import com.punct.punct_banking.models.entity.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

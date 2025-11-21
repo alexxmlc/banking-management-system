@@ -1,5 +1,7 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.repository;
 
+import com.punct.punct_banking.models.entity.Account;
+import com.punct.punct_banking.models.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,5 +1,7 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.util;
 
+import com.punct.punct_banking.repository.UserRepository;
+import com.punct.punct_banking.models.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;

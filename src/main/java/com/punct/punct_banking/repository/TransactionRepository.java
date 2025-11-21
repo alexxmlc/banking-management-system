@@ -1,5 +1,6 @@
-package com.punct.punct_banking;
+package com.punct.punct_banking.repository;
 
+import com.punct.punct_banking.models.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
