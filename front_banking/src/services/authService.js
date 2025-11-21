@@ -1,5 +1,4 @@
-// src/services/authService.js
-const BASE_URL = "http://localhost:8080/auth";
+const BASE_URL = "/auth";
 
 export async function login(username, password) {
   const response = await fetch(`${BASE_URL}/login`, {
@@ -18,8 +17,8 @@ export async function login(username, password) {
 }
 
 export async function register(userData) {
-  // userData = { username, email, password, phoneNumber, address } for example
-  const response = await fetch(`${BASE_URL}/register`, {
+  // userData = { username, email, password, phoneNumber, address } de ex.
+  const response = await fetch(`/user`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
