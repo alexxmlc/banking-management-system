@@ -1,28 +1,34 @@
-
-const API_URL = "/auth/login";
-// change backend runs on something else
+const BASE_URL = "http://localhost:8080/auth";
 
 export async function login(username, password) {
-  const response = await fetch(API_URL, {
+  const response = await fetch(`${BASE_URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      username, // must match LoginRequest.getUsername()
-      password, // must match LoginRequest.getPassword()
-    }),
+    body: JSON.stringify({ username, password }),
   });
 
   if (!response.ok) {
-    // 401 or other error → throw so the UI can show a message
     throw new Error("Login failed");
   }
 
-  const data = await response.json();
+  return response.json();
+}
 
-  // localStorage.setItem("token", data.token);
-  // localStorage.setItem("user", JSON.stringify(data));
+export async function register(userData) {
+  // userData = { username, email, password, phoneNumber, address } de ex.
+  const response = await fetch(`${BASE_URL}/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  });
 
-  return data; //JwtResponse
+  if (!response.ok) {
+    throw new Error("Register failed");
+  }
+
+  return response.json(); // sau nimic, depinde ce întoarce backend-ul
 }
