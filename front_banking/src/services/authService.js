@@ -1,5 +1,5 @@
 
-const API_URL = "http://localhost:8080/auth/login"; 
+const API_URL = "/auth/login";
 // change backend runs on something else
 
 export async function login(username, password) {
