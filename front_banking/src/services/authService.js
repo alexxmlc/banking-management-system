@@ -1,5 +1,5 @@
 // src/services/authService.js
-const BASE_URL = "http://localhost:8080/auth";
+const BASE_URL = "http://localhost:8081/auth";
 
 export async function login(username, password) {
   const response = await fetch(`${BASE_URL}/login`, {
