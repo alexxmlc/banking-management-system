@@ -1,3 +1,4 @@
+// src/services/authService.js
 const BASE_URL = "http://localhost:8080/auth";
 
 export async function login(username, password) {
@@ -13,11 +14,11 @@ export async function login(username, password) {
     throw new Error("Login failed");
   }
 
-  return response.json();
+  return response.json(); // JwtResponse
 }
 
 export async function register(userData) {
-  // userData = { username, email, password, phoneNumber, address } de ex.
+  // userData = { username, email, password, phoneNumber, address } for example
   const response = await fetch(`${BASE_URL}/register`, {
     method: "POST",
     headers: {
@@ -30,5 +31,11 @@ export async function register(userData) {
     throw new Error("Register failed");
   }
 
-  return response.json(); // sau nimic, depinde ce întoarce backend-ul
+  // Some backends return 201 with no body for register.
+  // Since your UI doesn't use the response, we can safely just return nothing.
+  try {
+    return await response.json();
+  } catch {
+    return null;
+  }
 }

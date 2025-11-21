@@ -3,7 +3,7 @@ services:
     image: postgres:latest
     container_name: punct_bank_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_DB: bank_db
       POSTGRES_USER: postgres
