@@ -1,7 +1,5 @@
-const BASE_URL = "/auth";
-
 export async function login(username, password) {
-  const response = await fetch(`${BASE_URL}/login`, {
+  const response = await fetch(`/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
