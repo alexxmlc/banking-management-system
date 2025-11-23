@@ -37,8 +37,33 @@ public class AccountController {
             String toIban = (String) request.get("toIban");
             BigDecimal amount = new BigDecimal(request.get("amount").toString());
 
-            accountService.transferFunds(principal.getName(), fromIban, toIban, amount);
-            return ResponseEntity.ok("Transfer successful");
+            accountService.initiateTransfer(principal.getName(), fromIban, toIban, amount);
+            return ResponseEntity.ok("Transfer initiated. Waiting for confirmation.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/transfer/me")
+    public List<Transaction> getIncomingTransfers(Principal principal) {
+        return accountService.getPendingIncomingTransfers(principal.getName());
+    }
+
+    @PostMapping("/transfer/{id}/accept")
+    public ResponseEntity<String> acceptIncomingTransfer(@RequestBody Long transactionId, Principal principal) {
+        try {
+            accountService.acceptTransfer(principal.getName(), transactionId);
+            return ResponseEntity.ok("Transfer accepted");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/transfer/{id}/reject")
+    public ResponseEntity<String> rejectIncomingTransfer(@RequestBody Long transactionId, Principal principal) {
+        try {
+            accountService.rejectTransfer(principal.getName(), transactionId);
+            return ResponseEntity.ok("Transfer rejected. Funds returned to sender");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -46,6 +71,6 @@ public class AccountController {
 
     @GetMapping("/{iban}/transactions")
     public List<Transaction> getHistory(@PathVariable String iban, Principal principal) {
-        return accountService.geTransactionHistory(principal.getName(), iban);
+        return accountService.getTransactionHistory(principal.getName(), iban);
     }
 }

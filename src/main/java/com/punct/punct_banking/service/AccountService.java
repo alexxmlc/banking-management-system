@@ -3,6 +3,7 @@ package com.punct.punct_banking.service;
 import com.punct.punct_banking.models.entity.Account;
 import com.punct.punct_banking.models.entity.Transaction;
 import com.punct.punct_banking.models.entity.User;
+import com.punct.punct_banking.models.enums.TransactionStatus;
 import com.punct.punct_banking.repository.AccountRepository;
 import com.punct.punct_banking.repository.TransactionRepository;
 import com.punct.punct_banking.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -28,47 +30,100 @@ public class AccountService {
     private TransactionRepository transactionRepository;
 
     @Transactional
-    public void transferFunds(String username, String fromIban, String toIban, BigDecimal amount) {
+    public void initiateTransfer(String username, String fromIban, String toIban, BigDecimal amount) {
         if (fromIban.equals(toIban)) {
             throw new RuntimeException("Cannot transfer funds to the same account");
         }
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new RuntimeException("Transfer amount must be positive");
+            throw new RuntimeException("Amount has to be positive");
         }
-
-        Account sourceAccount = accountRepository.findAccountByIban(fromIban)
-                .orElseThrow(() -> new RuntimeException("Source account not found"));
-
+        Account sourceAccount = accountRepository.findAccountByIban(fromIban).orElseThrow(() -> new RuntimeException("Source account not found"));
         if (!sourceAccount.getUser().getUsername().equals(username)) {
-            throw new RuntimeException("You do not own the source account");
+            throw new RuntimeException("You do not own the account");
         }
-
-        Account targetAccount = accountRepository.findAccountByIban(toIban)
-                .orElseThrow(() -> new RuntimeException("Target account not found"));
-
+        Account targetAccount = accountRepository.findAccountByIban(toIban).orElseThrow(() -> new RuntimeException("Target account not found"));
         if (sourceAccount.getBalance().compareTo(amount) < 0) {
             throw new RuntimeException("Insufficient funds");
         }
 
         sourceAccount.setBalance(sourceAccount.getBalance().subtract(amount));
-        targetAccount.setBalance(targetAccount.getBalance().add(amount));
-
         accountRepository.save(sourceAccount);
-        accountRepository.save(targetAccount);
 
         Transaction transaction = new Transaction();
+        transaction.setAmount(amount);
         transaction.setSourceIban(fromIban);
         transaction.setTargetIban(toIban);
-        transaction.setAmount(amount);
+        transaction.setDescription("Funds: [" + amount + "] received from " + username);
         transaction.setTimestamp(LocalDateTime.now());
-        transaction.setDescription("Transfer from " + username); // can and should be changed to in-app description written by user
+
+        if (sourceAccount.getUser().getId().equals(targetAccount.getUser().getId())) {
+            targetAccount.setBalance(targetAccount.getBalance().add(amount));
+            accountRepository.save(targetAccount);
+            transaction.setStatus(TransactionStatus.COMPLETED);
+        } else {
+            transaction.setStatus(TransactionStatus.PENDING);
+        }
 
         transactionRepository.save(transaction);
     }
 
-    public List<Transaction> geTransactionHistory(String username, String iban) {
-        Account account = accountRepository.findAccountByIban(iban)
-                .orElseThrow(() -> new RuntimeException("Account not found"));
+    @Transactional
+    public void acceptTransfer(String username, Long transactionId) {
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new RuntimeException("Transaction not found"));
+        if (transaction.getStatus() != TransactionStatus.PENDING) {
+            throw new RuntimeException("Transaction is not PENDING");
+        }
+        Account targetAccount = accountRepository.findAccountByIban(transaction.getTargetIban()).orElseThrow(() -> new RuntimeException("Target account not found"));
+
+        checkPermission(username, targetAccount);
+
+        targetAccount.setBalance(targetAccount.getBalance().add(transaction.getAmount()));
+        accountRepository.save(targetAccount);
+
+        transaction.setStatus(TransactionStatus.COMPLETED);
+        transactionRepository.save(transaction);
+    }
+
+    @Transactional
+    public void rejectTransfer(String username, Long transactionId) {
+        Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new RuntimeException("Transaction not found"));
+        if (transaction.getStatus() != TransactionStatus.PENDING) {
+            throw new RuntimeException("Transaction is not PENDING");
+        }
+        Account targetAccount = accountRepository.findAccountByIban(transaction.getTargetIban()).orElseThrow(() -> new RuntimeException("Target account not found"));
+
+        checkPermission(username, targetAccount);
+
+        Account sourceAccount = accountRepository.findAccountByIban(transaction.getSourceIban()).orElseThrow(() -> new RuntimeException("Source account not found"));
+        sourceAccount.setBalance(sourceAccount.getBalance().add(transaction.getAmount()));
+        accountRepository.save(sourceAccount);
+
+        transaction.setStatus(TransactionStatus.REJECTED);
+        transactionRepository.save(transaction);
+    }
+
+    public void checkPermission(String username, Account targetAccount) {
+        User currentUser = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        boolean isOwner = targetAccount.getUser().getUsername().equals(username);
+        boolean isAdmin = currentUser.getRoles().contains("ROLE_ADMIN");
+
+        if (!isOwner && !isAdmin) {
+            throw new RuntimeException("You do not have permission to manage this transfer");
+        }
+    }
+
+    public List<Transaction> getPendingIncomingTransfers(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        List<Transaction> allPending = new ArrayList<>();
+
+        for (Account acc : user.getAccounts()) {
+            allPending.addAll(transactionRepository.findByTargetIbanAndStatus(acc.getIban(), TransactionStatus.PENDING));
+        }
+        return allPending;
+    }
+
+    public List<Transaction> getTransactionHistory(String username, String iban) {
+        Account account = accountRepository.findAccountByIban(iban).orElseThrow(() -> new RuntimeException("Account not found"));
 
         if (!account.getUser().getUsername().equals(username)) {
             throw new RuntimeException("Access denied");
@@ -78,8 +133,7 @@ public class AccountService {
     }
 
     public Account createAccount(String username, String currency) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         Account account = new Account();
         account.setUser(user);
@@ -91,11 +145,14 @@ public class AccountService {
     }
 
     public List<Account> getMyAccounts(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         return accountRepository.findByUser(user);
     }
+
+    // TODO: depositFunds()
+
+    // TODO: withdrawFunds()
 
     // dummy implementation; change later... maybe... probably not
     private String generateIban() {

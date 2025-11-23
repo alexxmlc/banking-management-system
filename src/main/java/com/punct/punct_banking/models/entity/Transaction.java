@@ -1,5 +1,6 @@
 package com.punct.punct_banking.models.entity;
 
+import com.punct.punct_banking.models.enums.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,10 @@ public class Transaction {
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TransactionStatus status;
 
     // TODO: STATUS for when we want to implement `transaction requests` and `confirmations` eg. notification system
 

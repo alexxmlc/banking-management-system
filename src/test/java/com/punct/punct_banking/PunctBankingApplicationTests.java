@@ -10,4 +10,6 @@ class PunctBankingApplicationTests {
 	void contextLoads() {
 	}
 
+    // TODO: write some tests
+
 }
