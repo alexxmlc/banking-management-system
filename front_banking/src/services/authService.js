@@ -15,7 +15,6 @@ export async function login(username, password) {
 }
 
 export async function register(userData) {
-  // userData = { username, email, password, phoneNumber, address } de ex.
   const response = await fetch(`/user`, {
     method: "POST",
     headers: {
@@ -28,8 +27,6 @@ export async function register(userData) {
     throw new Error("Register failed");
   }
 
-  // Some backends return 201 with no body for register.
-  // Since your UI doesn't use the response, we can safely just return nothing.
   try {
     return await response.json();
   } catch {
