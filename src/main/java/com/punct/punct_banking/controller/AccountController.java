@@ -44,6 +44,32 @@ public class AccountController {
         }
     }
 
+    @PostMapping("/deposit")
+    public ResponseEntity<String> depositFunds(@RequestBody Map<String, Object> request, Principal principal) {
+        try {
+            String iban = request.get("iban").toString();
+            BigDecimal amount = (BigDecimal) request.get("amount");
+
+            accountService.depositFunds(principal.getName(), iban, amount);
+            return ResponseEntity.ok("Deposit successful");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<String> withdrawFunds(@RequestBody Map<String, Object> request, Principal principal) {
+        try {
+            String iban = request.get("iban").toString();
+            BigDecimal amount = (BigDecimal) request.get("amount");
+
+            accountService.withdrawFunds(principal.getName(), iban, amount);
+            return ResponseEntity.ok("Withdrawal successful");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/transfer/me")
     public List<Transaction> getIncomingTransfers(Principal principal) {
         return accountService.getPendingIncomingTransfers(principal.getName());

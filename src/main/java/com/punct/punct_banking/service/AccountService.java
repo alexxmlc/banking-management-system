@@ -1,10 +1,13 @@
 package com.punct.punct_banking.service;
 
 import com.punct.punct_banking.models.entity.Account;
+import com.punct.punct_banking.models.entity.CashTransaction;
 import com.punct.punct_banking.models.entity.Transaction;
 import com.punct.punct_banking.models.entity.User;
+import com.punct.punct_banking.models.enums.CashTransactionType;
 import com.punct.punct_banking.models.enums.TransactionStatus;
 import com.punct.punct_banking.repository.AccountRepository;
+import com.punct.punct_banking.repository.CashTransactionRepository;
 import com.punct.punct_banking.repository.TransactionRepository;
 import com.punct.punct_banking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,8 @@ public class AccountService {
 
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private CashTransactionRepository cashTransactionRepository;
 
     @Transactional
     public void initiateTransfer(String username, String fromIban, String toIban, BigDecimal amount) {
@@ -150,9 +155,48 @@ public class AccountService {
         return accountRepository.findByUser(user);
     }
 
-    // TODO: depositFunds()
+    @Transactional
+    public void depositFunds(String username, String iban, BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Amount must be positive");
+        }
+        Account account = accountRepository.findAccountByIban(iban)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        checkPermission(username, account);
+        account.setBalance(account.getBalance().add(amount));
+        accountRepository.save(account);
 
-    // TODO: withdrawFunds()
+        CashTransaction deposit = new CashTransaction();
+        deposit.setType(CashTransactionType.DEPOSIT);
+        deposit.setAmount(amount);
+        deposit.setIban(iban);
+        deposit.setDescription("Deposited " + amount + " in account " + iban);
+        deposit.setTimestamp(LocalDateTime.now());
+        cashTransactionRepository.save(deposit);
+    }
+
+    @Transactional
+    public void withdrawFunds(String username, String iban, BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new RuntimeException("Amount must be positive");
+        }
+        Account account = accountRepository.findAccountByIban(iban)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        checkPermission(username, account);
+        if (account.getBalance().compareTo(amount) < 0) {
+            throw new RuntimeException("Insufficient funds");
+        }
+        account.setBalance(account.getBalance().subtract(amount));
+        accountRepository.save(account);
+
+        CashTransaction withdrawal = new CashTransaction();
+        withdrawal.setIban(iban);
+        withdrawal.setType(CashTransactionType.WITHDRAWAL);
+        withdrawal.setAmount(amount);
+        withdrawal.setDescription("Withdrawn " + amount + " from account " + iban);
+        withdrawal.setTimestamp(LocalDateTime.now());
+        cashTransactionRepository.save(withdrawal);
+     }
 
     // dummy implementation; change later... maybe... probably not
     private String generateIban() {
