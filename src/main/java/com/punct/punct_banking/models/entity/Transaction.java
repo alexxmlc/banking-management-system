@@ -32,8 +32,6 @@ public class Transaction {
     @Column(nullable = false)
     private TransactionStatus status;
 
-    // TODO: STATUS for when we want to implement `transaction requests` and `confirmations` eg. notification system
-
     private String description;
 
 
