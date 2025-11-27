@@ -1,5 +1,7 @@
 package com.punct.punct_banking.util;
 
+import com.punct.punct_banking.models.entity.ATM;
+import com.punct.punct_banking.repository.ATMRepository;
 import com.punct.punct_banking.repository.UserRepository;
 import com.punct.punct_banking.models.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class DataInitializer implements CommandLineRunner {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ATMRepository atmRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -37,6 +41,21 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("------------ DEVELOPMENT MODE ------------");
             System.out.println("Admin user created: username='admin', password='adminpass'");
             System.out.println("------------------------------------------");
+
+            // Some Dummy ATMs
+            if (atmRepository.count() == 0) {
+                createATM("Floresti, Str. Principala", 46.7470, 23.4900);
+                createATM("Cluj-Napoca Centru", 46.7712, 23.6236);
+                createATM("Iulius Mall", 46.7704, 23.6322);
+            }
         }
+    }
+
+    private void createATM(String name, Double latitude, Double longitude) {
+        ATM atm = new ATM();
+        atm.setName(name);
+        atm.setLatitude(latitude);
+        atm.setLongitude(longitude);
+        atmRepository.save(atm);
     }
 }
