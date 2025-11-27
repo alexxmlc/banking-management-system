@@ -26,10 +26,13 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/atms").permitAll()
 
                         // ADMIN endpoint
                         .requestMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/user/promote/{username}").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/atms").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/atms/**").hasRole("ADMIN")
 
                         // USER endpoint
                         .requestMatchers("/user/me").authenticated()
