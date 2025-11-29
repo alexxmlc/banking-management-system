@@ -5,27 +5,40 @@ import lombok.Data;
 
 @Data
 public class LoginRequest {
+
     @NotBlank
     private String username;
 
     @NotBlank
     private String password;
 
-    // explicit getters/setters so the compiler is happy
+    private String code;
+
+    public LoginRequest() {
+    }
 
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
 }
