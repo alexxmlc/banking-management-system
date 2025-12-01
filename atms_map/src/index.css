@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Hide the Routing Machine white box */
+.leaflet-routing-container {
+    display: none !important;
+}

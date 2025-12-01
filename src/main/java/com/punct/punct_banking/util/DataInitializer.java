@@ -44,9 +44,9 @@ public class DataInitializer implements CommandLineRunner {
 
             // Some Dummy ATMs
             if (atmRepository.count() == 0) {
-                createATM("Floresti, Str. Principala", 46.7470, 23.4900);
-                createATM("Cluj-Napoca Centru", 46.7712, 23.6236);
-                createATM("Iulius Mall", 46.7704, 23.6322);
+                createATM("Hotel Napoca", 46.77188166632338, 23.577067307171735); // 46.77188166632338, 23.577067307171735
+                createATM("Piata Unirii", 46.769449346881146, 23.589566401095215); // 46.769449346881146, 23.589566401095215
+                createATM("Iulius Mall", 46.77178999489185, 23.625864376230744); // 46.77178999489185, 23.625864376230744
             }
         }
     }

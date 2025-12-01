@@ -48,7 +48,7 @@ public class AccountController {
     public ResponseEntity<String> depositFunds(@RequestBody Map<String, Object> request, Principal principal) {
         try {
             String iban = request.get("iban").toString();
-            BigDecimal amount = (BigDecimal) request.get("amount");
+            BigDecimal amount = new BigDecimal(request.get("amount").toString());
 
             accountService.depositFunds(principal.getName(), iban, amount);
             return ResponseEntity.ok("Deposit successful");
@@ -61,7 +61,7 @@ public class AccountController {
     public ResponseEntity<String> withdrawFunds(@RequestBody Map<String, Object> request, Principal principal) {
         try {
             String iban = request.get("iban").toString();
-            BigDecimal amount = (BigDecimal) request.get("amount");
+            BigDecimal amount = new BigDecimal(request.get("amount").toString());
 
             accountService.withdrawFunds(principal.getName(), iban, amount);
             return ResponseEntity.ok("Withdrawal successful");
