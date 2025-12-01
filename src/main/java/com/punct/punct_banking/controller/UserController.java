@@ -37,13 +37,11 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable String id, @Valid @RequestBody User userDetails) {
-        // TODO: orice user autentificat poate schimba datele altui user !! nu ar trebui decat pe ale lui; fa un check
         return userService.updateUser(id, userDetails);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable String id) {
-        // TODO: la fel ca mai sus
         return userService.deleteUser(id);
     }
 

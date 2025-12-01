@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/atms").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
 
                         // ADMIN endpoint
                         .requestMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
