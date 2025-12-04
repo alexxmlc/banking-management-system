@@ -13,8 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.punct.punct_banking.service.DocumentService;
 
-import net.sourceforge.tess4j.TesseractException;
-
 @RestController
 @RequestMapping("/documents")
 public class DocumentController {
@@ -23,7 +21,6 @@ public class DocumentController {
     DocumentService documentService;
 
     @PostMapping("/upload")
-
     public ResponseEntity<?> getUploadedDocument(@RequestPart MultipartFile document) {
 
         String fileName;
@@ -38,7 +35,7 @@ public class DocumentController {
         }
         try {
             dataFromDocument = documentService.extractText(fileName);
-        } catch (TesseractException e) {
+        } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to read data from document");
