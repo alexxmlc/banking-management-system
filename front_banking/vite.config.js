@@ -6,21 +6,25 @@ export default defineConfig({
     plugins: [react()],
     server: {
         proxy: {
-            // Any request starting with /auth will be forwarded to port 8080
+            '/atms': {
+                target: 'http://localhost:8081',
+                changeOrigin: true,
+                secure: false,
+            },
             '/auth': {
-                target: 'http://localhost:8080',
+                target: 'http://localhost:8081',
                 changeOrigin: true,
                 secure: false,
             },
             // Same for /accounts
             '/accounts': {
-                target: 'http://localhost:8080',
+                target: 'http://localhost:8081',
                 changeOrigin: true,
                 secure: false,
             },
             // Same for /user
             '/user': {
-                target: 'http://localhost:8080',
+                target: 'http://localhost:8081',
                 changeOrigin: true,
                 secure: false,
             }
