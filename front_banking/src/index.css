@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* hides the leaflet map controls widget */
+.leaflet-routing-container {
+    display: none !important;
+}
+
 /* ==== Animated gradient blob background ==== */
 
 @keyframes blob-rotate {
