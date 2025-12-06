@@ -15,7 +15,6 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -53,5 +52,8 @@ public class User {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String secret;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String documentName;
 
 }

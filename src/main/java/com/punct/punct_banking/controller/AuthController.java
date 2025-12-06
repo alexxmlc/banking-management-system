@@ -51,56 +51,56 @@ public class AuthController {
      * * 4. To login with 2FA: Send { username, password, code }.
      */
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        // 1. First authenticate username + password
+        Authentication authentication;
         try {
-            // The input comes in as loginRequest
-            // Wrap it in an unauthorized token (UsernamePasswordAuthenticationToken)
-            // Then send the unauthorized token to AuthenticationManager
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
-            Optional<User> optionalUser = userRepository.findByUsername(loginRequest.getUsername());
-
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-
-                // Check if 2FA is enabled for this user
-                if (user.getSecret() != null) {
-
-                    // First, check if they even sent a code
-                    if (loginRequest.getCode() == null || loginRequest.getCode().isEmpty()) {
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                    }
-
-                    // Then, check if the code is valid
-                    if (!codeVerifier.isValidCode(user.getSecret(), loginRequest.getCode())) {
-                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-                    }
-                }
-                // If the password from the DB matches with the one that the user entered in
-                // login form
-                // Authentication is now valid and we can generate a token for this user
-                String token = jwtUtils.generateJwtToken(authentication);
-
-                // Put the token and the user into a DTO
-                JwtResponse jwtResponse = new JwtResponse(
-                        token,
-                        user.getId(),
-                        user.getUsername(),
-                        user.getEmail(),
-                        user.getPhoneNumber(),
-                        user.getAddress(),
-                        List.of(user.getRoles().split(",")));
-
-                // Send it back as JSON
-                return ResponseEntity.ok(jwtResponse);
-
-            }
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid username or password");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
+        // 2. Find the user
+        Optional<User> optionalUser = userRepository.findByUsername(loginRequest.getUsername());
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Invalid credentials");
+        }
+
+        User user = optionalUser.get();
+
+        // 3. If 2FA is enabled, verify the code
+        if (user.getSecret() != null) {
+
+            if (loginRequest.getCode() == null || loginRequest.getCode().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("2FA code required");
+            }
+
+            if (!codeVerifier.isValidCode(user.getSecret(), loginRequest.getCode())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Invalid 2FA code");
+            }
+        }
+
+        // 4. Generate token
+        String token = jwtUtils.generateJwtToken(authentication);
+
+        // 5. Build response DTO
+        JwtResponse jwtResponse = new JwtResponse(
+                token,
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getAddress(),
+                List.of(user.getRoles().split(",")));
+
+        return ResponseEntity.ok(jwtResponse);
     }
+
 }
