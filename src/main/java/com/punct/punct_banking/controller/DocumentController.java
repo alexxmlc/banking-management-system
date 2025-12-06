@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.punct.punct_banking.dto.ExtractedData;
 import com.punct.punct_banking.service.DocumentService;
 
 @RestController
@@ -24,7 +25,7 @@ public class DocumentController {
     public ResponseEntity<?> getUploadedDocument(@RequestPart MultipartFile document) {
 
         String fileName;
-        String dataFromDocument;
+        ExtractedData extractedData;
 
         try {
             fileName = documentService.saveDocument(document);
@@ -34,12 +35,12 @@ public class DocumentController {
                     .body("Failed to upload the file");
         }
         try {
-            dataFromDocument = documentService.extractText(fileName);
+            extractedData = documentService.extractText(fileName);
         } catch (RuntimeException e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to read data from document");
         }
-        return ResponseEntity.ok(dataFromDocument);
+        return ResponseEntity.ok(extractedData);
     }
 }
