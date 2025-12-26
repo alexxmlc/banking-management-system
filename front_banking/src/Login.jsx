@@ -1,8 +1,41 @@
 import { useState } from "react";
 import Header from "./components/Header.jsx";
 import { login } from "./services/authService";
+import { useEffect, useRef } from "react";
+
 
 function Login() {
+  //efect pentru background (blur colorat dupa mouse movement)
+  const blobRef = useRef(null);
+
+  useEffect(() => {
+
+    //fac event handler pe mouse (pointer de movement)
+    const handlePointerMove = (event) => {
+      //coordonatele mouse-ului
+      const {clientX, clientY} = event;
+
+      if(!blobRef.current) return;
+
+      blobRef.current.animate(
+        {
+          left: `${clientX}px`,
+          top: `${clientY}px`
+        },
+        {
+          duration: 2500, //smooth follow
+          fill: "forwards",
+        }
+      );
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    return () => window.removeEventListener("pointermove", handlePointerMove);
+
+
+  }, [])
+  
+  
   const [username, setUsername] = useState(""); // backend expects username
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -34,12 +67,20 @@ function Login() {
 
   return (
     <main
-      className="min-h-screen 
+      className="relative
+                 min-h-screen 
                  bg-slate-950 
                  text-white 
                  flex 
-                 flex-col"
+                 flex-col
+                 overflow-hidden"
     >
+      {/*BACKGROUND EFFECT*/}
+      <div id="blob" 
+            ref={blobRef} 
+            />
+      <div id="blur"/>
+
       <Header />
 
       {/* Page content */}
