@@ -36,7 +36,7 @@ function Login() {
   }, [])
   
   
-  const [username, setUsername] = useState(""); // backend expects username
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,13 +50,9 @@ function Login() {
       const data = await login(username, password);
       console.log("Login success:", data);
 
-      // store token + user if you want to keep the user logged in
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
 
-      // TODO: redirect to dashboard or main page after login
-      // e.g. useNavigate from react-router, but we keep it simple for now
-      // navigate("/dashboard");
     } catch (err) {
       console.error(err);
       setError("Invalid username or password.");
@@ -81,10 +77,12 @@ function Login() {
             />
       <div id="blur"/>
 
+      {/*Content*/}
+      <div className="relative z-10 flex flex-col">
       <Header />
 
       {/* Page content */}
-      <div className="flex flex-1 items-center justify-center px-4">
+      <div className="flex flex-1 items-center justify-center px-4 pt-32">
         <div className="w-full max-w-md bg-slate-900/80 border border-indigo-400/40 rounded-3xl shadow-xl p-8">
           <h1 className="text-2xl font-semibold mb-2 text-indigo-200">
             Log in to your account
@@ -152,6 +150,7 @@ function Login() {
             </button>
           </form>
         </div>
+      </div>
       </div>
     </main>
   );
