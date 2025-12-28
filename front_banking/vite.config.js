@@ -27,7 +27,21 @@ export default defineConfig({
                 target: 'http://localhost:8081',
                 changeOrigin: true,
                 secure: false,
-            }
-        }
+            },
+
+            '/register': {
+                target: 'http://localhost:8081',
+                changeOrigin: true,
+                secure: false,
+            },
+
+            '/documents': {
+                target: 'http://localhost:8081',
+                changeOrigin: true,
+                secure: false,
+            },
+
+            
+        },
     }
 })

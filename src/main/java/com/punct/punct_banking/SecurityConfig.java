@@ -37,6 +37,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/atms").permitAll()
                         .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
+                        .requestMatchers("/register", "/documents/**", "/auth/**").permitAll()
+
 
                         // ADMIN endpoint
                         .requestMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
@@ -83,8 +85,21 @@ public class SecurityConfig {
         return new ZxingPngQrGenerator();
     }
 
+    /* 
     @Bean
     public CodeVerifier codeVerifier() {
         return new DefaultCodeVerifier(new DefaultCodeGenerator(), new SystemTimeProvider());
     }
+    */
+
+    @Bean
+    public CodeVerifier codeVerifier() {
+        DefaultCodeVerifier verifier =
+            new DefaultCodeVerifier(new DefaultCodeGenerator(), new SystemTimeProvider());
+
+        verifier.setAllowedTimePeriodDiscrepancy(1); // mai adauga 30 de secunde la interval 
+
+    return verifier;
+}
+
 }
