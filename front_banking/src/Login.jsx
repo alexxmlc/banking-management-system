@@ -41,21 +41,45 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  //pentru 2FA
+  const [code, setCode] = useState("");
+  const [need2fa, setNeed2fa] = useState(false);
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //opreste refresh la pagina dupa submit
     setError("");
-    setLoading(true);
+    setLoading(true); //porneste starea de loading
 
     try {
-      const data = await login(username, password);
+      //scot spatiile din codul 2FA daca e cazul
+      const normalizedCode = need2fa ? code.replace(/\s+/g, "") : undefined;
+      //astept dupa backend
+      const data = await login(username, password, normalizedCode);
+
       console.log("Login success:", data);
 
+      //salvez tokenul si userul in localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
 
     } catch (err) {
+
+      //compun mesajul de eroare in functie de situatie
+      const msg = err?.message || "Login failed";
       console.error(err);
-      setError("Invalid username or password.");
+
+      //verific daca e nevoie de 2FA sau altceva
+      if (msg.includes("2FA code required")){
+        setNeed2fa(true);
+        setError("Enter your 2FA code from the authenticator app.");
+
+      }else if(msg.includes("Invalid 2FA code")){
+        setNeed2fa(true);
+        setError("Invalid 2FA code. Please try again.");
+      }else{
+        setNeed2fa(false);
+        setError("Invalid username or password.");
+      }
     } finally {
       setLoading(false);
     }
@@ -91,6 +115,7 @@ function Login() {
             See, move, and protect your money in one dashboard.
           </p>
 
+          {/* Error message */}
           {error && (
             <div className="mb-4 rounded-xl bg-red-500/10 border border-red-500/60 px-4 py-2 text-sm text-red-200">
               {error}
@@ -111,6 +136,7 @@ function Login() {
                 type="text"
                 required
                 value={username}
+                //actualizez state-ul la schimbare
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-700 text-slate-100 text-sm
                            focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
@@ -138,6 +164,31 @@ function Login() {
               />
             </div>
 
+            {/* field pentru 2FA care se afiseaza doar cand e nevoie*/}
+            {need2fa && (
+              <div>
+                <label
+                     htmlFor="code"
+                      className="block text-sm font-medium text-slate-200 mb-1"
+                >
+                  2FA Code
+                </label>
+                <input
+                  id="code"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950/80 border border-slate-700 text-slate-100 text-sm
+                             focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400"
+                  placeholder="123456"
+                   required
+                />
+              </div>
+            )}
+
+
             {/* Submit button */}
             <button
               type="submit"
@@ -146,7 +197,7 @@ function Login() {
                          hover:bg-indigo-300 disabled:opacity-60 disabled:cursor-not-allowed
                          transition border border-indigo-300 shadow-lg shadow-indigo-500/20"
             >
-              {loading ? "Logging in..." : "Log in"}
+              {loading ? "Logging in..." : need2fa ? "Verify & log in" : "Log in"}
             </button>
           </form>
         </div>
