@@ -2,6 +2,7 @@ package com.punct.punct_banking;
 
 import com.punct.punct_banking.models.entity.Notification;
 import com.punct.punct_banking.models.entity.User;
+import com.punct.punct_banking.models.enums.NotificationType;
 import com.punct.punct_banking.notifications.NotificationPublisher;
 import com.punct.punct_banking.notifications.events.NotificationEvent;
 import com.punct.punct_banking.repository.NotificationRepository;
@@ -43,7 +44,7 @@ public class NotificationObserverIntegrationTest {
 
             notificationPublisher.publish(new NotificationEvent(
                     cnp,
-                    "TEST",
+                    NotificationType.DEPOSIT_SUCCESS,
                     "Test title",
                     "Observer works"
             ));

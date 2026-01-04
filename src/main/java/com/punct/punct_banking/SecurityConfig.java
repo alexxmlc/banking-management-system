@@ -39,6 +39,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/documents/upload").permitAll()
                         .requestMatchers("/register", "/documents/**", "/auth/**").permitAll()
 
+                        //DEV
+                        .requestMatchers("/api/dev/**").permitAll()
+
+                        .requestMatchers("/api/notifications/**").authenticated()
+
+
 
                         // ADMIN endpoint
                         .requestMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
