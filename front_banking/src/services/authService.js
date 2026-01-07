@@ -14,6 +14,7 @@ export async function login(username, password, code) {
   }
 
   return response.json();
+
 }
 
 
@@ -86,3 +87,61 @@ export async function verify2faCode(userId, code) {
   if (!res.ok) throw new Error(await readErrorText(res));
   return true;
 }
+
+//helper pentru request-uri
+function authHeaders(){
+  const token = localStorage.getItem("token");
+  return token ? {Authorization: `Bearer ${token}`} : {};
+}
+
+
+//NOTIFICARI
+
+//iau notificarile utilizatorului
+export async function getMyNotifications(){
+  const res = await fetch(`/api/notifications`, {
+    //se foloseste metoda GET
+    method: "GET",
+    //adaug header-ele
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) throw new Error(await readErrorText(res));
+
+  return res.json(); //face return la List<NotificationDto>
+}
+
+//iau notificarile necitite ale utilizatorului
+export async function getUnreadCount(){
+  const res = await fetch(`/api/notifications/unread-count`, {
+    method: "GET",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) throw new Error(await readErrorText(res));
+
+  return res.json(); //o sa dea ceva gen {count : number}
+}
+
+export async function markNotificationAsRead(id) {
+  const res = await fetch(`/api/notifications/${id}/read`, {
+    method: "PATCH",
+    headers: { ...authHeaders(), "Content-Type": "application/json"  },
+  });
+
+  if (!res.ok) throw new Error(await readErrorText(res));
+  return res.json(); // { count: number }
+}
+
+export async function markAllNotificationsAsRead() {
+  const res = await fetch(`/api/notifications/read-all`, {
+    method: "PATCH",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+  });
+
+  if (!res.ok) throw new Error(await readErrorText(res));
+  return res.json(); // { count: number }
+}
+
+
+

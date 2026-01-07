@@ -29,7 +29,7 @@ public class NotificationDevController {
                         userId,
                         NotificationType.TEST,
                         "Test notification",
-                        "Hello from Postman 👋"
+                        "Hello from Postman"
                 )
         );
     }
