@@ -2,6 +2,7 @@ import { useState } from "react";
 import Header from "./components/Header.jsx";
 import { login } from "./services/authService";
 import { useEffect, useRef } from "react";
+import {useNavigate} from "react-router-dom";
 
 
 function Login() {
@@ -45,6 +46,9 @@ function Login() {
   const [code, setCode] = useState("");
   const [need2fa, setNeed2fa] = useState(false);
 
+  //NAVIGARE LA HOME PAGE PENTRU USER
+  const navigateHome = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault(); //opreste refresh la pagina dupa submit
     setError("");
@@ -53,6 +57,9 @@ function Login() {
     try {
       //scot spatiile din codul 2FA daca e cazul
       const normalizedCode = need2fa ? code.replace(/\s+/g, "") : undefined;
+
+      //TOKEN
+
       //astept dupa backend
       const data = await login(username, password, normalizedCode);
 
@@ -61,6 +68,9 @@ function Login() {
       //salvez tokenul si userul in localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data));
+
+      //dupa ce login a avut succes => home page pentru user
+      navigateHome("/user/home");
 
     } catch (err) {
 
@@ -84,6 +94,8 @@ function Login() {
       setLoading(false);
     }
   };
+
+  
 
   return (
     <main

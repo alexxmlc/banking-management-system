@@ -41,7 +41,13 @@ export default defineConfig({
                 secure: false,
             },
 
-            
+            //asta e pentru notificari (am pus direct /api ca sa nu mai scriu toate proxy-urile)
+            '/api': {
+                target: "http://localhost:8081",
+                changeOrigin: true,
+                secure: false
+            },
+
         },
     }
 })
