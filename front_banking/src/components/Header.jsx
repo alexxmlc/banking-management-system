@@ -1,39 +1,30 @@
 import { Link } from "react-router-dom";
 
 function Header() {
+  const navItems = [
+    { label: "About us", to: "/about" },
+    { label: "Services", to: "/services" }, 
+    { label: "Find Us", to: "/find-us" },
+  ];
+
   return (
     <header>
       <div
-        className="w-full 
-                   mx-auto 
-                   px-6 
-                   py-4 
-                   grid
-                   grid-cols-3  
-                   items-center"
+        className="w-full mx-auto px-6 py-4 grid grid-cols-3 items-center"
       >
         {/* Logo */}
         <Link to="/" className="justify-self-start">
-          <p
-            className="text-[30px]
-                       font-bold 
-                       text-indigo-400/70"
-          >
+          <p className="text-[30px] font-bold text-indigo-400/70">
             Point<span className="text-violet-400">Bank</span>
           </p>
         </Link>
 
         {/* NAV */}
-        <nav
-          className="flex 
-                     gap-10
-                     text-[15px]
-                     justify-self-center"
-        >
-          {["About us", "Services", "Cards", "Contact"].map((label) => (
-            <button
+        <nav className="flex gap-10 text-[15px] justify-self-center">
+          {navItems.map(({ label, to }) => (
+            <Link
               key={label}
-              type="button"
+              to={to}
               className="
                 group
                 relative
@@ -80,7 +71,7 @@ function Header() {
                 "
               />
 
-              {/* subtle glow on hover */}
+              {/* subtle glow */}
               <span
                 className="
                   pointer-events-none
@@ -99,8 +90,10 @@ function Header() {
               />
 
               {/* label */}
-              <span className="relative z-10 font-medium">{label}</span>
-            </button>
+              <span className="relative z-10 font-medium">
+                {label}
+              </span>
+            </Link>
           ))}
         </nav>
       </div>

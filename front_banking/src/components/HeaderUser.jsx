@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 
 function HeaderUser() {
+  const navItems = [
+    { label: "Find Us", to: "/find-us" },
+    { label: "Services", to: "/services" },
+    { label: "Account", to: "/user/account" },
+  ];
+
   return (
     <header>
       <div
@@ -14,11 +20,7 @@ function HeaderUser() {
       >
         {/* Logo */}
         <Link to="/user/home" className="justify-self-start">
-          <p
-            className="text-[30px]
-                       font-bold 
-                       text-indigo-400/70"
-          >
+          <p className="text-[30px] font-bold text-indigo-400/70">
             Point<span className="text-violet-400">Bank</span>
           </p>
         </Link>
@@ -30,10 +32,10 @@ function HeaderUser() {
                      text-[15px]
                      justify-self-center"
         >
-          {["About us", "Services", "Cards", "Contact", "Account"].map((label) => (
-            <button
+          {navItems.map(({ label, to }) => (
+            <Link
               key={label}
-              type="button"
+              to={to}
               className="
                 group
                 relative
@@ -99,8 +101,10 @@ function HeaderUser() {
               />
 
               {/* label */}
-              <span className="relative z-10 font-medium">{label}</span>
-            </button>
+              <span className="relative z-10 font-medium">
+                {label}
+              </span>
+            </Link>
           ))}
         </nav>
       </div>
