@@ -9,7 +9,7 @@ import AboutUs from "./AboutUs.jsx";
 import ServicesAccount from './ServicesAccount.jsx';
 import Account from "./Account.jsx";
 import ServicesHome from './ServicesHome.jsx';
-
+import FindUs from './FindUs.jsx';
 
 function App() {
     return (
@@ -25,6 +25,7 @@ function App() {
                 <Route path="/services" element={<ServicesAccount />} />
                 <Route path="/user/account" element={<Account />} />
                 <Route path="/home/services" element={<ServicesHome />} />
+                <Route path="/find-us" element={<FindUs />} />
 
             </Routes>
 

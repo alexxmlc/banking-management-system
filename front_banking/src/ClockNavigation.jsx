@@ -3,7 +3,7 @@ function ClockNavigation() {
   const navItems = [
     { label: "About us", href: "/about", top: -100, left: 80 },
     { label: "Services", href: "/home/services", top: 100, left: 150 },
-    { label: "FindUs", href: "#cards", top: 300, left: 80 },
+    { label: "FindUs", href: "/find-us", top: 300, left: 80 },
   ];
 
   return (
