@@ -12,7 +12,6 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import L from "leaflet";
 import "leaflet-routing-machine";
 
-// --- ICONS ---
 const atmIcon = new L.Icon({
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png",
@@ -33,7 +32,7 @@ const pegmanSvg = `
 </svg>`;
 
 const userIcon = new L.Icon({
-  // btoa merge ok în browser (Vite). Dacă ai probleme, îți zic un fallback.
+ 
   iconUrl: `data:image/svg+xml;base64,${btoa(pegmanSvg)}`,
   shadowUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
@@ -43,7 +42,6 @@ const userIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-// --- HELPERS ---
 function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
@@ -62,7 +60,6 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// --- MAP COMPONENTS ---
 function MapInputHandler({ active, onSelect }) {
   useMapEvents({
     click(e) {
@@ -118,7 +115,6 @@ function MapController({ selectedAtm, userPos }) {
   return null;
 }
 
-// --- TRANSACTION CARD ---
 function TransactionCard({
   atm,
   token,
@@ -145,7 +141,6 @@ function TransactionCard({
       )
     : null;
 
-  // 1.0km threshold
   const isNearby = currentDistance !== null && currentDistance < 1.0;
 
   const handleSubmit = async (e) => {
@@ -259,13 +254,10 @@ function TransactionCard({
   );
 }
 
-// --- MAIN PAGE COMPONENT ---
 function FindUs() {
   const [atms, setAtms] = useState([]);
   const [accounts, setAccounts] = useState([]);
 
-  // IMPORTANT: in proiectul vostru probabil aveți deja token-ul JWT în altă cheie.
-  // Colegul folosește "map_token". Păstrez ca să nu stric logica.
   const [token, setToken] = useState(localStorage.getItem("map_token"));
 
   const [userPos, setUserPos] = useState(null);
@@ -303,7 +295,7 @@ function FindUs() {
       });
   }, [token]);
 
-  // 3) Compute distances whenever userPos changes
+  
   useEffect(() => {
     if (userPos && atms.length > 0) {
       setAtms((prev) =>
