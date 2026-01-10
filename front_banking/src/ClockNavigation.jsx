@@ -1,10 +1,9 @@
 
 function ClockNavigation() {
   const navItems = [
-    { label: "About us", href: "#about-us", top: -200, left: 10 },
-    { label: "Services", href: "#services", top: 0, left: 150 },
-    { label: "Cards", href: "#cards", top: 200, left: 150 },
-    { label: "Contact", href: "#contact", top: 400, left: 10 },
+    { label: "About us", href: "/about", top: -100, left: 80 },
+    { label: "Services", href: "/home/services", top: 100, left: 150 },
+    { label: "FindUs", href: "#cards", top: 300, left: 80 },
   ];
 
   return (
