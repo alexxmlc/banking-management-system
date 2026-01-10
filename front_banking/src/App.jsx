@@ -6,6 +6,7 @@ import Atms from "./components/Atms.jsx";
 import TwoFASetup from "./TwoFASetup.jsx";
 import HomePageUser from "./HomePageUser.jsx";
 import AboutUs from "./AboutUs.jsx";
+import ServicesAccount from './ServicesAccount.jsx';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
                 <Route path="/2fa/setup" element={<TwoFASetup />} />
                 <Route path="/user/home" element={<HomePageUser />} />
                 <Route path="/about" element={<AboutUs />} />
-
+                <Route path="/services" element={<ServicesAccount />} />
             </Routes>
 
         </>

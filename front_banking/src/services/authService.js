@@ -89,16 +89,16 @@ export async function verify2faCode(userId, code) {
 }
 
 //helper pentru request-uri
-function authHeaders(){
+function authHeaders() {
   const token = localStorage.getItem("token");
-  return token ? {Authorization: `Bearer ${token}`} : {};
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 
 //NOTIFICARI
 
 //iau notificarile utilizatorului
-export async function getMyNotifications(){
+export async function getMyNotifications() {
   const res = await fetch(`/api/notifications`, {
     //se foloseste metoda GET
     method: "GET",
@@ -112,7 +112,7 @@ export async function getMyNotifications(){
 }
 
 //iau notificarile necitite ale utilizatorului
-export async function getUnreadCount(){
+export async function getUnreadCount() {
   const res = await fetch(`/api/notifications/unread-count`, {
     method: "GET",
     headers: { ...authHeaders(), "Content-Type": "application/json" },
@@ -126,7 +126,7 @@ export async function getUnreadCount(){
 export async function markNotificationAsRead(id) {
   const res = await fetch(`/api/notifications/${id}/read`, {
     method: "PATCH",
-    headers: { ...authHeaders(), "Content-Type": "application/json"  },
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
   });
 
   if (!res.ok) throw new Error(await readErrorText(res));
@@ -143,5 +143,56 @@ export async function markAllNotificationsAsRead() {
   return res.json(); // { count: number }
 }
 
+//1. GET MY ACCOUNTS
+export async function getMyAccounts() {
+  const res = await fetch(`/accounts/me`, {
+    method: "GET",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error(await readErrorText(res));
+  return res.json();
+}
 
+//2. CREATE ACCOUNT
+export async function createAccount(currency) {
+  const res = await fetch(`/accounts`, {
+    method: "POST",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ currency }),
+  });
+  if (!res.ok) throw new Error(await readErrorText(res));
+  return res.json();
+}
 
+//3. TRANSFER MONEY
+export async function transferMoney(fromIban, toIban, amount) {
+  const res = await fetch(`/accounts/transfer`, {
+    method: "POST",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ fromIban, toIban, amount }),
+  });
+  if (!res.ok) throw new Error(await readErrorText(res));
+  return res.text();
+}
+
+//4. DEPOSIT MONEY
+export async function depositMoney(iban, amount) {
+  const res = await fetch(`/accounts/deposit`, {
+    method: "POST",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ iban, amount }),
+  });
+  if (!res.ok) throw new Error(await readErrorText(res));
+  return res.text();
+}
+
+//5. WITHDRAW MONEY
+export async function withdrawMoney(iban, amount) {
+  const res = await fetch(`/accounts/withdraw`, {
+    method: "POST",
+    headers: { ...authHeaders(), "Content-Type": "application/json" },
+    body: JSON.stringify({ iban, amount }),
+  });
+  if (!res.ok) throw new Error(await readErrorText(res));
+  return res.text();
+}
