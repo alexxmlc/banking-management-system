@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 function Header() {
   const navItems = [
     { label: "About us", to: "/about" },
-    { label: "Services", to: "/services" }, 
+    { label: "Services", to: "/home/services" }, 
     { label: "Find Us", to: "/find-us" },
   ];
 
