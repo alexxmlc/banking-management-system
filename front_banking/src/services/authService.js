@@ -145,3 +145,44 @@ export async function markAllNotificationsAsRead() {
 
 
 
+//ACCOUNT
+
+//asta ia conturile de la user
+export async function getMyAccounts(){
+  const res = await fetch("/accounts/me", {
+    method: "GET",
+    headers: {
+      ...authHeaders(),
+      "Content-Type": "application/json",
+    },
+  });
+
+  if(!res.ok){
+    throw new Error (await res.text());
+  }
+
+  return res.json(); //cred ca ar trebui sa returneze ceva gen List<Account>
+
+}
+
+//asta ii functie pentru creare cont nou
+export async function createAccount(currency){
+  const res = await fetch("/accounts", {
+    method: "POST",
+    headers: {
+      ...authHeaders(),
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify({currency}),
+
+  });
+
+  if(!res.ok){
+    throw new Error (await res.text());
+  }
+
+  return res.json();
+}
+
+
