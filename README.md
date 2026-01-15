@@ -6,7 +6,7 @@ frontend.
 
 ## Use Case Diagram
 
-![use case diagram](use_case_banking.svg)
+![use case diagram](use_case.svg)
 
 ## Features
 

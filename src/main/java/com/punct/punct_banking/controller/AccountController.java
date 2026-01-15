@@ -1,22 +1,19 @@
 package com.punct.punct_banking.controller;
 
+import com.punct.punct_banking.command.DepositCommand;
+import com.punct.punct_banking.command.TransactionCommand;
+import com.punct.punct_banking.command.WithdrawCommand;
+import com.punct.punct_banking.models.entity.Account;
+import com.punct.punct_banking.models.entity.Transaction;
+import com.punct.punct_banking.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.punct.punct_banking.models.entity.Account;
-import com.punct.punct_banking.models.entity.Transaction;
-import com.punct.punct_banking.service.AccountService;
 
 @RestController
 @RequestMapping("/accounts")
@@ -43,7 +40,14 @@ public class AccountController {
             String toIban = (String) request.get("toIban");
             BigDecimal amount = new BigDecimal(request.get("amount").toString());
 
-            accountService.initiateTransfer(principal.getName(), fromIban, toIban, amount);
+            TransactionCommand command = new TransactionCommand(
+                    accountService,
+                    principal.getName(),
+                    fromIban,
+                    toIban,
+                    amount
+            );
+            command.execute();
             return ResponseEntity.ok("Transfer initiated. Waiting for confirmation.");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -56,7 +60,13 @@ public class AccountController {
             String iban = request.get("iban").toString();
             BigDecimal amount = new BigDecimal(request.get("amount").toString());
 
-            accountService.depositFunds(principal.getName(), iban, amount);
+            DepositCommand command = new DepositCommand(
+                    accountService,
+                    principal.getName(),
+                    iban,
+                    amount
+            );
+            command.execute();
             return ResponseEntity.ok("Deposit successful");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -69,7 +79,13 @@ public class AccountController {
             String iban = request.get("iban").toString();
             BigDecimal amount = new BigDecimal(request.get("amount").toString());
 
-            accountService.withdrawFunds(principal.getName(), iban, amount);
+            WithdrawCommand command = new WithdrawCommand(
+                    accountService,
+                    principal.getName(),
+                    iban,
+                    amount
+            );
+            command.execute();
             return ResponseEntity.ok("Withdrawal successful");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
